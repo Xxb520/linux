@@ -1,0 +1,78 @@
+1.网卡故障分为：
+		① 硬件故障
+		② 软件故障（大部分情况）：
+				① 设置故障
+				② 驱动程序故障
+				
+2.dmesg 显示系统引导时的提示信息
+	eg dmesg | grep eth
+
+3.lspci 列出linux系统检测到的所有PCI设备
+
+4.ethtool 查看以太网卡链路连接是否正常
+	eg ethtool eth0
+
+5./lib/module 所有的网卡驱动程序都可以在此目录下找到
+	/lib/modules/2.6.32-754.9.1.el6.x86_64/kernel/drivers/net/
+	所有以 .ko结尾的文件都是驱动模块
+	如果某种网卡linux内核不支持，则需要从其他途径获取驱动模块并复制到此目录中
+	
+	/etc/modprobe.conf中包含了有关模块的安装和别名信息
+
+6.lsmod 用于查看当前系统装载的模块
+				
+7.modinfo 用于查看模块的详细信息
+	其中包含 alias参数
+	
+8./lib/modules/2.6.32-754.9.1.el6.x86_64/modules.alias 文件的内容定义了系统所检测到的PCI设备使用哪些模块
+	alias usb:v*p*d*dcE0dsc01dp01ic*isc*ip* btusb
+	alias sdio:c03v*d* btsdio
+	alias sdio:c02v*d* btsdio
+	alias sdio:c*v02DFd9105* btmrvl_sdio
+	alias mmc:block mmc_block
+	alias sdio:c04v*d* sdio_uart
+	alias sdio:c01v*d* sdio_uart
+	alias pci:v*d*sv*sd*bc08sc05i* sdhci_pci
+	表示linux检测到如上设备时装入并使用哪些模块
+	
+9.route 显示路由表
+	eg route -n
+
+10. arp -d ip 删除相关条目
+	arp -a <ip> <MAC> 设置静态arp条目
+
+11. iptables -F 清除防火墙的所有规则
+	/etc/rc.d/init.d/iptables stop 停止防火墙运行
+	
+12. netstat 用于查看端口的状态
+	eg netstat -anp | grep 80
+
+13. tcpdump 抓包工具
+	eg tcpdump host 192.168.3.250 and tcp port 80
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
