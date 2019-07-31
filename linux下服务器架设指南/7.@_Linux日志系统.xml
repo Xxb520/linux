@@ -1,0 +1,136 @@
+1.	syslog	提供系统日志功能
+	
+	/etc/rsyslog.conf 		配置文件
+	
+	 42 *.info;mail.none;authpriv.none;cron.none                /var/log/messages
+	 43 
+	 44 # The authpriv file has restricted access.
+	 45 authpriv.*                                              /var/log/secure
+	 46 
+	 47 # Log all the mail messages in one place.
+	 48 mail.*                                                  -/var/log/maillog
+	 49 
+	 50 
+	 51 # Log cron stuff
+	 52 cron.*                                                  /var/log/cron
+	 53 
+	 54 # Everybody gets emergency messages
+	 55 *.emerg                                                 *
+	 56 
+	 57 # Save news errors of level crit and higher in a special file.
+	 58 uucp,news.crit                                          /var/log/spooler
+	 59 
+	 60 # Save boot messages also to boot.log
+	 61 local7.*                                                /var/log/boot.log
+
+	[设备名.级别][;设备名.级别] ...	位置
+	
+	可以有多个 ”设备名.级别” 之间用 ; 分隔
+	
+	设备名 可以是多个，用 ，分隔
+	
+	设备名.级别 和 位置 之间用 TAB 键隔开
+	
+	eg
+		mail.err	表示发送到mail日志设备的级别 等于或高于 err的日志
+		
+		kern.=alert	表示向kern日志设备发送级别 等于 alert的日志
+		
+		*			表示所有的日志设备和日志级别
+		
+		none		表示忽略全部
+		
+		daemon.*	表示把所有级别的日志发送到 daemon 设备名
+		
+		*.emerg		表示把emerg级别的所有日志发送到所有设备
+		
+		kern.none	表示忽略所有的内核日志
+
+
+
+2.	/etc/rc.d/init.d/rsyslog [start] [stop] [restart]
+
+3.	logrotate		日志转储、压缩、备份
+	
+	/usr/sbin/logrotate		命令文件
+	/etc/logrotate.conf		主配置文件
+	/etc/cron.daily/logrotate执行logrotate命令的脚本，每天执行一次
+	
+4.	/var/log/wtmp 	/var/log/lastlog	/var/run/utmp	保留用户的登陆日志文件
+
+	lastlog			查询 lastlog 文件
+	
+	who				
+	
+	w				查询 utmp 文件
+	
+	last			查询 wtmp 文件	第二列为终端名，:0 表示控制台
+	
+5.	/etc/rc.d/init.d/psacct	start	开启进程记账
+	accton	/var/account/pacct		开启进程记账
+	
+	/etc/rc.d/init.d/psacct stop 或者 accton	停止记账功能
+	
+	/var/account/pacct				日志文件，记录用户执行过的命令等
+	
+	lastcomm		输出日志中的信息
+		--user <name>		列出指定用户名的记录
+		--command <name>	列出与指定命令相同的记录
+		--tty <name>		列出指定终端执行的进程
+		-f <filename>		从指定的文件中读取数据，而不是默认的日志文件
+		
+6.	sa	/usr/sbin	统计列出以前执行过的命令曾经占用多少 CPU 时间的信息
+		-u			列出执行进程的用户
+		-l			将系统时间和用户时间分别输出
+		-m			汇总每个用户占用的 CPU 时间
+		
+7.	ac	/usr/bin	统计用户的在线时间
+
+	ac -p			列出每个用户的在线总时间
+	
+	ac -d 			列出每天所有用户的在线总时间
+	
+8.	logcheck
+	swatch			日志分析工具
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+

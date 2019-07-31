@@ -1,0 +1,50 @@
+1. 配置SELinux
+	/etc/sysconfig/selinux -> ../selinux/config
+	/etc/selinux目录包含了所有的有关SELinux的配置文件
+	
+  1 # This file controls the state of SELinux on the system.
+  2 # SELINUX= can take one of these three values:
+  3 #   enforcing - SELinux security policy is enforced.
+  4 #   permissive - SELinux prints warnings instead of enforcing.
+  5 #   disabled - SELinux is fully disabled.
+  6 SELINUX=disabled
+  7 # SELINUXTYPE= type of policy in use. Possible values are:
+  8 #   targeted - Only targeted network daemons are protected.
+  9 #   strict - Full SELinux protection.
+ 10 SELINUXTYPE=targeted
+ 
+	SELINUX可以是 	enforcing	强制
+					permissive	随意
+					disabled	禁用
+					
+	SELINUXTYPE 为	targeted	表示只针对特定的守护进程进行保护
+					strict		表示针对所有的守护进程进行保护
+					
+2. 	semanage user -l 列出SELinux用户		
+	
+	semanage login -a xxb	普通用户与SELinux的user_u用户建立联系
+	
+	semanage login -l		查看结果
+	
+	chcat -l 				查看当前类别的情况，这些内容在 /etc/selinux/targeted/setrans.conf 文件中指定
+	
+	s0:C1=Marketing
+	s0:c2=Personnel			添加两个类别，代号分别为 s0:c1 s0:c2
+	
+	service mcstrans restart重启服务，是添加的类别生效
+	
+	chcat -l -- +Marketing zhangs
+	chcat -l -- +Personnel lisi		把类别分配给用户
+	chcat -l -- +Marketing, +Personnel zhangs	同时把两个类别分配给zhangs
+	
+	ls -Z					查看文件初始的安全上下文
+	
+	chcat -- +Personnel abc.txt		将 Personnel 类别分配给文件
+	
+	setenforce 1			使 SELinux 处于强制使用方式
+	
+	
+	
+	
+	
+	

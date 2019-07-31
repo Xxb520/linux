@@ -1,0 +1,37 @@
+1. /etc/yum.repos.d/*.repo	资源库配置文件
+
+2. yum [选项] [动作] [软件包名称]
+	-t 处理多个软件包时，忽略前面的错误，继续处理后面的软件包
+	-c [config file] 指定配置文件的路径和名字
+	-y 所有的询问均以 y 回答
+	--noplugins 禁用插件
+	
+	install
+	updat
+	check-update 检查哪些软件包可以更新
+	remove
+	search
+	list 列出所有软件包的名称和版本，类似 rpm -qa
+	info 列出所有软件包的名称、版本、说明 类似 rpm -qai
+	clean 清除/var/cache/yum目录的下载的内容
+	
+	eg	yum -y install gcc
+	
+		yum check-update	检查可以更新的 rpm 包
+		
+		yum update 			更新所有的 rpm 包
+		
+		yum remove gcc
+		
+		yum clean all
+		
+		yum list			列出资源库中所有可以安装或更新的软件包
+		
+		yum info mozilla	列出资源库中 mozilla 软件包的说明信息
+		
+		yum search mozilla
+		
+		yum grouplist		列出可安装的软件包组
+		
+		
+3. /usr/sbin/yum-complete-transaction 是一个python编写的程序，定期从 yum 资源库查看最新的软件包更新信息
