@@ -1,0 +1,99 @@
+1.	route		对路由表中条目进行管理
+
+	eg	route add -net 127.0.0.0 netmask 255.0.0.0 dev lo	
+		
+		route add -net 192.56.76.0 netmask 255.255.255.0 gw 192.56.1.1
+		
+		route add 192.56.1.1 eth0
+		
+		route add default gw 10.1.1.1
+		
+		route add -net 172.16.0.0 netmask 255.255.0.0 reject
+		
+		route del -net 127.0.0.0 netmask 255.0.0.0
+		
+		route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.168.1.1 dev eth0
+		
+2.	echo 1 > /proc/sys/net/ipv4/ip_forward		设置linux可以在各个网口转发数据，重启失效
+
+	/etc/sysctl.conf  中 net.ipv4.ip_forward=1	修改后执行  sysctl -p  永久生效，实时修改内核运行时的参数
+	
+3.	iproute		提供有关策略路由的 ip 命令，对路由、设备、策略路由和隧道的管理
+
+	255		本地路由表，存储本地接口地址、广播地址、NAT地址等
+	254		主路由表，route命令所添加的路由都会加入到这个表
+	253		默认路由表，推荐把默认的路由放在这张表
+	0		保留给系统，不允许使用
+	
+	ip route <del | add | replace > ROUTE	分别表示删除、增加、置换路由，ROUTE 表示一条路由
+	
+	eg	ip route add 192.168.1.0/24 via 192.168.0.3 table 1
+	
+		ip route add default via 192.168.0.4 table main
+		
+		ip route add 192.168.1.0/24 dev eth0 table 10
+		
+		ip route delete 192.168.1.0/24 dev eth0 table 10
+		
+		ip route shuow 	= route -n		列出主路由表中的路由
+		
+		echo 7 special >> /etc/iproute2/rt_tables	
+		
+		ip route add default via 192.168.99.254 table special	使用 special 字符串作为路由表名称，在 /etc/iproute2/rt_tables 添加  special 字符串对应的数字
+
+4.	ip rule <add | delete> [匹配项目] [动作]	添加、删除、显示规则等
+
+	ip rule flush			清除所有的规则
+	
+	ip rule show			列出规则
+	
+	匹配项目：
+		from <IP 地址> 		指定匹配的源 IP 地址
+		
+		to <IP 地址>		指定匹配的目的 IP 地址
+		
+		iif <网络接口>		指定数据包从哪个网络接口进来
+		
+		tos <TOS值>			指定匹配的 IP 包头 TOS 域的值
+		
+		fwmark <标志>		指定匹配的防火墙设定的参数标志值
+		
+		priority <优先级>	指定该规则的优先级
+		
+	动作：
+		table <路由表>		按指定的路由表进行路由
+		
+		nat <IP地址>		为数据包设定 NAT 地址
+		
+		prohibit			丢弃该包，并回复 ICMP prohibited 信息
+		
+		reject				单纯丢弃该包，不发送 ICMP 信息
+		
+		unreachable			丢弃该包，并回复 ICMP net unreachable 信息
+		
+	eg：
+		ip rule show
+
+		ip rule add from 10.10.1.0/24 priority 1234 table 10	在规则链中添加一条优先级为 1234 的规则，规定所有来自 10.10.1.0/24 子网的数据包使用编号为 10 的路由表
+
+		ip rule add from 192.168.3.112/32 tos 0x10 pref 4321 prohibit	添加一条优先级为 4321 的规则，丢弃所有来自 192.168.3.112/32 子网，TOS 为10的数据包，
+																		并向发送数据包的主机回复ICMP出错的信息
+
+5.	echo 1 cernet >> /etc/iproute2/rt_tables
+	echo 2 chinanet >> /etc/iproute2/rt_tables		在linux主机中定义两个路由表
+	
+	ip route add default via 10.10.1.1 dev eth0 table cernet
+	ip route add default via 10.10.2.1 dev eth1 table chinanet		在这两个路由表中分别设置到 cernet 和 ChinaNet 的默认路由
+	
+	ip rule add from 192.168.0.0/16 table cernet	规定所有来自 192.168.0.0/16子网的数据包使用 cernet 路由表
+	ip rule add from 172.16.0.0/12 table chinanet	规定所有来自 172.16.0.0/12子网的数据包使用 chainnet 路由表
+
+
+
+
+
+
+
+
+
+	
