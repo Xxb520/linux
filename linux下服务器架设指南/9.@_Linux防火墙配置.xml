@@ -84,6 +84,73 @@
 		
 		-j <规则链名称> 	数据包将会传递到另一条规则链，并进行匹配
 		
+2.	/etc/rc.d/init.d/iptables save				对防火墙配置做了修改，并保存已经配置的 iptables 规则
+
+	cat /etc/sysconfig/iptables 				防火墙规则保存在此文件中
+	
+	iptables-save > abc		将正在使用的防火墙的规则保存在 abc 文件中，如果希望再次使用 iptables，使用下面规则
+	
+	/etc/rc.d/init.d/iptables start				实际上是清除防火墙所有规则后，再按 /etc/sysconfig/iptables 文件重新设定防火墙规则
+	
+	iptables-restore < abc	将保存在 abc 文件中的规则重新载入到防火墙中
+	
+	/etc/rc.d/init.d/iptables stop				实际上是清空防火墙规则，与 “ iptables -F “ 类似 /etc/sysconfig/iptables-config 为 iptables 的配置文件
+		
+	配置文件如下：
+		
+		IPTABLES_MODOULES="ip_conntrack_netbios_ns ip_conntrack_ftp"	载入两个 iptables 模块
+		
+		IPTABLES_MODOULES_UNLOAD="yes"			当 iptables 重启或停止时，卸载所有载入模块
+		
+		IPTABLES_SAVE_ON_STOP="no"				当 iptables 停止时，是否把规则和链保存到 /etc/sysconfig/iptables 文件，no 表示否
+		
+		IPTABLES_save_ON_RESTART="no"			当重启 iptables ，是否把规则和链保存到 /etc/sysconfig/iptables 文件，no 表示否
+		
+		IPTABLES_SAVE_COUNTER="no"				当保存规则和链时，是否同时保存计数值，no 表示否
+		
+		IPTABLES_STATUS_NUMRIC="yes"			输出 iptables 状态时，是否以数字形式输出 IP 地址和端口号，yes 表示是
+		
+		IPTABLES_STATUS_VERBOSE="no"			输出 iptables 状态时，是否包含输入输出设备， no 表示否
+		
+		IPTABLES_STATUS_LINENUMBERS="yes"		输出 iptables 状态时，是否同时输出每条规则的匹配数，yes 表示是 >
+
+3.	iptables -L				查看默认添加的规则，默认列出 filter 中的规则链
+
+	iptables -v -L			列出每条规则数当前匹配的数据包数、以及要求数据包进来和出去的网络接口， -n 不对 ip 地址和端口做名称解析， --line-number 可以在第一列显示每条规则的规则号
+		
+		
+4.	常用的主机防火墙规则:
+	
+		一般采取先放行，最后全部禁止的方法
+		
+		eg：
+			
+			iptables -A INPUT -p tcp --dport 80 -j ACCEPT		允许目的端口为 80 的 TCP 数据包通过 INPUT 链
+			
+			iptables -A INPUT -s 192.168.1.0/24 -i eth0 -j DROP	从 eth0 接口进来，源 IP 地址为 192.168.1.0/24 的数据包予以丢弃
+			
+			iptables -A INPUT -p udp --sport 53 --dport 1024:65535 -j ACCEPT	在 INPUT 链中允许源端口为 53 ，目标端口为 1024至 65535 的 UDP 数据包通过
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
